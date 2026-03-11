@@ -29,6 +29,9 @@
             width: 100%;
             margin-bottom: 15px;
             box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: var(--radius);
         }
         #switch-mode {
             color: var(--primary-orange);
@@ -55,7 +58,7 @@
         </div>
     </div>
 
-    <!-- Script avec les liens Firebase corrigés -->
+    <!-- Script avec les liens d'importation Firebase CORRIGÉS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com";
@@ -69,6 +72,7 @@
           appId: "1:102104750653:web:33610ac358ad77e7322854"
         };
 
+        // Initialisation
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
@@ -80,6 +84,7 @@
 
         let isRegisterMode = true;
 
+        // Basculer entre Inscription et Connexion
         switchMode.onclick = () => {
             isRegisterMode = !isRegisterMode;
             formTitle.innerText = isRegisterMode ? "Créer un compte" : "Se connecter";
@@ -87,6 +92,7 @@
             switchMode.innerText = isRegisterMode ? "Se connecter" : "S'inscrire";
         };
 
+        // Action au clic
         btnAction.onclick = async () => {
             const email = emailInput.value;
             const password = passwordInput.value;
@@ -104,11 +110,14 @@
                     await signInWithEmailAndPassword(auth, email, password);
                     alert("Connexion réussie !");
                 }
+                // Redirection vers la page d'accueil
                 window.location.href = "accueil.html"; 
             } catch (error) {
+                console.error("Erreur Firebase:", error.code);
                 alert("Erreur : " + error.message);
             }
         };
     </script>
 </body>
 </html>
+
