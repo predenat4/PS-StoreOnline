@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentification - PS Store Online</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Un petit style rapide pour que ce ne soit pas tout blanc */
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f4f9; }
+        .auth-container { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        #switch-mode { color: #007bff; cursor: pointer; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <h1 id="form-title">Créer un compte</h1>
+        
+        <input type="email" id="email" placeholder="Votre Email" required>
+        <input type="password" id="password" placeholder="Mot de passe (6 car. min)" required>
+        
+        <button id="btn-action">S'inscrire</button>
+        
+        <p id="toggle-text">Déjà un compte ? <span id="switch-mode">Se connecter</span></p>
+    </div>
+
+    <script type="module">
+        // Importations via CDN pour que ça fonctionne direct sur GitHub
+        import { initializeApp } from "https://www.gstatic.com";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com";
+
+        // Tes clés de configuration intégrées
+        const firebaseConfig = {
+          apiKey: "AIzaSyBs3sU5DJvYmyEfzz4gSLZeamCyBDDx4bg",
+          authDomain: "ps-store-online.firebaseapp.com",
+          projectId: "ps-store-online",
+          storageBucket: "ps-store-online.firebasestorage.app",
+          messagingSenderId: "102104750653",
+          appId: "1:102104750653:web:33610ac358ad77e7322854"
+        };
+
+        // Initialisation de Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Sélection des éléments HTML
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const btnAction = document.getElementById('btn-action');
+        const switchMode = document.getElementById('switch-mode');
+        const formTitle = document.getElementById('form-title');
+
+        let isRegisterMode = true;
+
+        // Basculer entre Inscription et Connexion
+        switchMode.onclick = () => {
+            isRegisterMode = !isRegisterMode;
+            formTitle.innerText = isRegisterMode ? "Créer un compte" : "Se connecter";
+            btnAction.innerText = isRegisterMode ? "S'inscrire" : "Se connecter";
+            switchMode.innerText = isRegisterMode ? "Se connecter" : "S'inscrire";
+        };
+
+        // Action au clic (Inscription ou Connexion)
+        btnAction.onclick = async () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            if(email === "" || password === "") {
+                alert("Remplis tous les champs !");
+                return;
+            }
+
+            try {
+                if (isRegisterMode) {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    alert("Compte créé avec succès ! Bienvenue chez PS Store.");
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    alert("Connexion réussie !");
+                }
+                // Redirection vers la page d'accueil (à créer ensuite)
+                window.location.href = "accueil.html"; 
+            } catch (error) {
+                console.error(error);
+                alert("Erreur : " + error.message);
+            }
+        };
+    </script>
+</body>
+</html>
+
