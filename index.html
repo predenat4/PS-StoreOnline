@@ -1,59 +1,95 @@
-<!-- 1. Chargement des bibliothèques Firebase (Méthode classique sans import) -->
-<script src="https://www.gstatic.com"></script>
-<script src="https://www.gstatic.com"></script>
-
-<script>
-    // 2. Configuration (Tes clés)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBs3sU5DJvYmyEfzz4gSLZeamCyBDDx4bg",
-      authDomain: "ps-store-online.firebaseapp.com",
-      projectId: "ps-store-online",
-      storageBucket: "ps-store-online.firebasestorage.app",
-      messagingSenderId: "102104750653",
-      appId: "1:102104750653:web:33610ac358ad77e7322854"
-    };
-
-    // 3. Initialisation (Syntaxe "compat" plus simple)
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    // 4. Éléments HTML
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const btnAction = document.getElementById('btn-action');
-    const switchMode = document.getElementById('switch-mode');
-    const formTitle = document.getElementById('form-title');
-
-    let isRegisterMode = true;
-
-    switchMode.onclick = () => {
-        isRegisterMode = !isRegisterMode;
-        formTitle.innerText = isRegisterMode ? "Créer un compte" : "Se connecter";
-        btnAction.innerText = isRegisterMode ? "S'inscrire" : "Se connecter";
-        switchMode.innerText = isRegisterMode ? "Se connecter" : "S'inscrire";
-    };
-
-    btnAction.onclick = async () => {
-        const email = emailInput.value;
-        const password = passwordInput.value;
-
-        if(!email || !password) {
-            alert("Remplis les champs !");
-            return;
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - PS Store Online</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .auth-container { 
+            background: white; padding: 40px; border-radius: var(--radius); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; 
+            text-align: center; animation: fadeIn 0.8s ease-out; 
         }
+        input { width: 100%; margin-bottom: 15px; box-sizing: border-box; padding: 12px; border: 1px solid #eee; border-radius: var(--radius); }
+        #switch-mode { color: var(--primary-orange); cursor: pointer; font-weight: bold; text-decoration: underline; }
+    </style>
+</head>
+<body>
 
-        try {
-            if (isRegisterMode) {
-                await auth.createUserWithEmailAndPassword(email, password);
-                alert("Compte créé avec succès !");
-            } else {
-                await auth.signInWithEmailAndPassword(email, password);
-                alert("Connexion réussie !");
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <h1 id="form-title" style="margin-bottom: 30px;">Créer un compte</h1>
+            <input type="email" id="email" placeholder="Votre Email" required>
+            <input type="password" id="password" placeholder="Mot de passe (6 car. min)" required>
+            <button id="btn-action" class="btn" style="width: 100%; margin-top: 10px;">S'inscrire</button>
+            <p id="toggle-text" style="margin-top: 20px; font-size: 14px;">
+                Déjà un compte ? <span id="switch-mode">Se connecter</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- CHARGEMENT DES SCRIPTS FIREBASE (VERSION COMPAT) -->
+    <script src="https://www.gstatic.com"></script>
+    <script src="https://www.gstatic.com"></script>
+
+    <script>
+        // CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyBs3sU5DJvYmyEfzz4gSLZeamCyBDDx4bg",
+            authDomain: "ps-store-online.firebaseapp.com",
+            projectId: "ps-store-online",
+            storageBucket: "ps-store-online.firebasestorage.app",
+            messagingSenderId: "102104750653",
+            appId: "1:102104750653:web:33610ac358ad77e7322854"
+        };
+
+        // INITIALISATION
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const btnAction = document.getElementById('btn-action');
+        const switchMode = document.getElementById('switch-mode');
+        const formTitle = document.getElementById('form-title');
+
+        let isRegisterMode = true;
+
+        // BASCULE CONNEXION / INSCRIPTION
+        switchMode.onclick = () => {
+            isRegisterMode = !isRegisterMode;
+            formTitle.innerText = isRegisterMode ? "Créer un compte" : "Se connecter";
+            btnAction.innerText = isRegisterMode ? "S'inscrire" : "Se connecter";
+            switchMode.innerText = isRegisterMode ? "Se connecter" : "S'inscrire";
+        };
+
+        // LOGIQUE DU BOUTON
+        btnAction.onclick = async () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            if(!email || !password) {
+                alert("Veuillez remplir tous les champs.");
+                return;
             }
-            window.location.href = "accueil.html"; 
-        } catch (error) {
-            alert("Erreur : " + error.message);
-            console.error(error);
-        }
-    };
-</script>
+
+            try {
+                if (isRegisterMode) {
+                    await auth.createUserWithEmailAndPassword(email, password);
+                    alert("Succès ! Compte créé.");
+                } else {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    alert("Succès ! Vous êtes connecté.");
+                }
+                // Redirection vers l'accueil
+                window.location.href = "accueil.html";
+            } catch (error) {
+                console.error(error);
+                alert("Erreur : " + error.message);
+            }
+        };
+    </script>
+</body>
+</html>
