@@ -55,6 +55,7 @@
         </div>
     </div>
 
+    <!-- Script avec les liens Firebase corrigés -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com";
@@ -98,8 +99,10 @@
             try {
                 if (isRegisterMode) {
                     await createUserWithEmailAndPassword(auth, email, password);
+                    alert("Compte créé avec succès !");
                 } else {
                     await signInWithEmailAndPassword(auth, email, password);
+                    alert("Connexion réussie !");
                 }
                 window.location.href = "accueil.html"; 
             } catch (error) {
