@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PS Store - Boutique Officielle</title>
+    <!-- Liaison vers ton fichier de style personnalisé -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Icônes Lucide -->
     <script src="https://unpkg.com"></script>
     <style>
+        /* Styles structurels nécessaires pour le fonctionnement (la déco est dans style.css) */
         :root {
             --primary: #2563eb;
             --accent: #f59e0b;
@@ -13,9 +17,8 @@
             --light: #f8fafc;
         }
 
-        body { font-family: 'Inter', sans-serif; margin: 0; background: var(--light); overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
-        /* --- NAVIGATION --- */
         nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1rem 5%; background: white; position: sticky; top: 0; z-index: 100;
@@ -32,11 +35,10 @@
 
         .cart-container { position: relative; cursor: pointer; }
         #cart-badge {
-            position: absolute; -10px; right: -10px; background: red; color: white;
+            position: absolute; top: -10px; right: -10px; color: white;
             border-radius: 50%; padding: 2px 6px; font-size: 11px;
         }
 
-        /* --- SIDEBAR (MENU) --- */
         .sidebar {
             position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
             background: var(--dark); color: white; transition: 0.3s; z-index: 1000;
@@ -46,24 +48,20 @@
         .sidebar h2 { border-bottom: 1px solid #334155; padding-bottom: 10px; }
         .sidebar ul { list-style: none; padding: 0; }
         .sidebar li { padding: 15px 0; border-bottom: 1px solid #1e293b; cursor: pointer; transition: 0.2s; }
-        .sidebar li:hover { color: var(--accent); padding-left: 10px; }
 
-        /* --- PRODUCT GRID & SCROLL --- */
         .category-row { padding: 20px 5%; }
         .row-header { display: flex; justify-content: space-between; align-items: center; }
         
         .product-scroll {
             display: flex; overflow-x: auto; gap: 20px; padding: 20px 0;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
-        .product-scroll::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+        .product-scroll::-webkit-scrollbar { display: none; }
 
-        /* --- PRODUCT CARD --- */
         .card {
             min-width: 240px; background: white; border-radius: 12px; overflow: hidden;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: 0.3s;
         }
-        .card:hover { transform: translateY(-10px); }
         
         .img-container { height: 200px; width: 100%; background: #e2e8f0; position: relative; }
         .img-container img { width: 100%; height: 100%; object-fit: cover; }
@@ -72,13 +70,6 @@
         .price { font-size: 1.2rem; font-weight: 800; color: var(--dark); margin: 5px 0; }
         
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        .btn { 
-            padding: 8px; border: none; border-radius: 6px; cursor: pointer; 
-            font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 4px;
-        }
-        .btn-add { background: var(--dark); color: white; grid-column: span 2; }
-        .btn-view { background: #f1f5f9; color: var(--dark); }
-        .btn-color { background: #fef3c7; color: #92400e; }
 
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -105,7 +96,7 @@
     <nav>
         <div class="nav-left">
             <button class="menu-toggle" onclick="toggleMenu()"><i data-lucide="menu"></i></button>
-            <h1 style="color: var(--primary); margin:0;">PS STORE</h1>
+            <h1 style="color: #ff8c00; margin:0;">PS STORE</h1>
         </div>
 
         <div class="search-container">
@@ -121,30 +112,27 @@
 
     <!-- Contenu des Produits -->
     <div id="shop-content">
-        <!-- Les catégories seront injectées ici -->
+        <!-- Les catégories seront injectées ici par JS -->
     </div>
 
     <script>
         lucide.createIcons();
 
-        // 1. Les données des produits
         const data = [
-            { id: 101, name: "T-Shirt Premium Cotton", price: "25.000 GNF", cat: "Vêtements", img: "https://images.unsplash.com" },
-            { id: 102, name: "Jean Slim Fit", price: "45.000 GNF", cat: "Vêtements", img: "https://images.unsplash.com" },
-            { id: 201, name: "Boxer Sport (Lot de 3)", price: "15.000 GNF", cat: "Sous-vêtements", img: "https://images.unsplash.com" },
-            { id: 301, name: "Sneakers Air Max", price: "85.000 GNF", cat: "Chaussures", img: "https://images.unsplash.com" },
-            { id: 401, name: "iPhone 15 Pro", price: "12.000.000 GNF", cat: "Appareils Électroniques", img: "https://images.unsplash.com" }
+            { id: 101, name: "T-Shirt Premium Cotton", price: "25.000 Gourdes", cat: "Vêtements", img: "" },
+            { id: 102, name: "Jean Slim Fit", price: "45.000 Gourdes", cat: "Vêtements", img: "" },
+            { id: 201, name: "Boxer Sport (Lot de 3)", price: "15.000 Gourdes", cat: "Sous-vêtements", img: "" },
+            { id: 301, name: "Sneakers Air Max", price: "85.000 Gourdes", cat: "Chaussures", img: "" },
+            { id: 401, name: "iPhone 15 Pro", price: "12.000.000 Gourdes", cat: "Appareils Électroniques", img: "" }
         ];
 
         let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
-        // 2. Fonction Menu
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        // 3. Affichage des produits
         function initShop() {
             const categories = ["Vêtements", "Sous-vêtements", "Chaussures", "Appareils Électroniques"];
             const container = document.getElementById('shop-content');
@@ -157,13 +145,14 @@
                 section.innerHTML = `
                     <div class="row-header">
                         <h2>${cat}</h2>
-                        <a href="tous-les-produits.html" style="color:var(--primary); text-decoration:none;">Voir tout</a>
+                        <a href="tous-les-produits.html" style="color:#ff8c00; text-decoration:none; font-weight:bold;">Voir tout</a>
                     </div>
                     <div class="product-scroll">
                         ${items.map(p => `
                             <div class="card">
                                 <div class="img-container">
-                                    <img src="${p.img}" alt="${p.name}">
+                                    <!-- Espace pour tes images futures -->
+                                    <div style="display:flex; align-items:center; justify-content:center; height:100%; color:#cbd5e1;">Image</div>
                                 </div>
                                 <div class="info">
                                     <h3 style="font-size:14px; margin:0;">${p.name}</h3>
@@ -176,7 +165,7 @@
                                             <i data-lucide="palette" style="width:14px;"></i> Couleurs
                                         </button>
                                         <button class="btn btn-add" onclick="ajouterAuPanier(${p.id})">
-                                            <i data-lucide="shopping-cart" style="width:14px;"></i> Ajouter au panier
+                                            <i data-lucide="shopping-cart" style="width:14px;"></i> Ajouter
                                         </button>
                                     </div>
                                 </div>
@@ -190,17 +179,11 @@
             updateBadge();
         }
 
-        // 4. Logique Panier
         function ajouterAuPanier(id) {
             const produit = data.find(p => p.id === id);
             panier.push(produit);
             localStorage.setItem('panier', JSON.stringify(panier));
             updateBadge();
-            
-            // Animation flash sur le badge
-            const badge = document.getElementById('cart-badge');
-            badge.style.transform = "scale(1.5)";
-            setTimeout(() => badge.style.transform = "scale(1)", 200);
         }
 
         function updateBadge() {
